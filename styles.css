@@ -954,6 +954,14 @@ a {
         text-align: center;
     }
 
+    .section-title {
+        text-align: center;
+    }
+
+    .section-bg-title {
+        display: none;
+    }
+
     .hero-label,
     .hero-description {
         margin-left: auto;
@@ -980,6 +988,22 @@ a {
 
     .skills-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .skills-category h3 {
+        text-align: center;
+    }
+
+    .exp-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .exp-details {
+        text-align: left;
+        padding-left: 20px;
     }
 
     .layout {
