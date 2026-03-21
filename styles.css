@@ -568,6 +568,11 @@ a {
     font-weight: 700;
 }
 
+.project-icon {
+    font-size: 1.1rem;
+    margin-right: 2px;
+}
+
 .project-arrow {
     font-size: 1.5rem;
     color: var(--text-muted);
