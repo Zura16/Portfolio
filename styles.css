@@ -524,14 +524,13 @@ a {
 }
 
 .project-card .border-glow-inner {
-    flex-direction: row;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
 }
 
 .project-image {
-    width: 340px;
-    flex-shrink: 0;
-    overflow: hidden;
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    display: none;
 }
 
 .project-image img {
@@ -546,11 +545,12 @@ a {
 }
 
 .project-info {
-    padding: 28px 32px;
+    padding: 40px 32px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 1;
+    align-items: center;
+    width: 100%;
 }
 
 .project-header {
@@ -929,6 +929,7 @@ a {
     .project-info {
         text-align: center;
         align-items: center;
+        padding: 32px 20px;
     }
 
     .project-header {
@@ -936,70 +937,47 @@ a {
         gap: 8px;
     }
 
-    .project-tags {
-        justify-content: center;
-    }
+    @media (max-width: 768px) {
+        .floating-nav {
+            top: auto;
+            bottom: 16px;
+            padding: 8px 12px;
+        }
 
-    .contact-content {
-        grid-template-columns: 1fr;
-    }
+        .hero-title {
+            font-size: 2.5rem;
+            text-align: center;
+        }
 
-    .section-bg-title {
-        display: none;
-    }
+        .hero-label,
+        .hero-description {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            display: block;
+            width: fit-content;
+        }
 
-    .section-title {
-        text-align: center;
-    }
+        .contact-title {
+            font-size: 2.2rem;
+            text-align: center;
+        }
 
-    .exp-header,
-    .edu-header {
-        flex-direction: column;
-        gap: 4px;
-    }
-}
+        .hero-stats {
+            flex-direction: column;
+            align-items: center;
+        }
 
-@media (max-width: 768px) {
-    .floating-nav {
-        top: auto;
-        bottom: 16px;
-        padding: 8px 12px;
-    }
+        .stat-card {
+            width: 100%;
+            max-width: 300px;
+        }
 
-    .hero-title {
-        font-size: 2.5rem;
-        text-align: center;
-    }
+        .skills-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
 
-    .hero-label,
-    .hero-description {
-        margin-left: auto;
-        margin-right: auto;
-        text-align: center;
-        display: block;
-        width: fit-content;
+        .layout {
+            padding-bottom: 80px;
+        }
     }
-
-    .contact-title {
-        font-size: 2.2rem;
-        text-align: center;
-    }
-
-    .hero-stats {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .stat-card {
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .skills-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .layout {
-        padding-bottom: 80px;
-    }
-}
