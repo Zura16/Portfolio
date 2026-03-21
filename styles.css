@@ -955,7 +955,8 @@ a {
     }
 
     .section-title {
-        text-align: center;
+        text-align: center !important;
+        width: 100%;
     }
 
     .section-bg-title {
@@ -990,14 +991,33 @@ a {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .skills-category h3 {
+    .skills-category-title {
         text-align: center;
     }
 
     .exp-header {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 8px;
+    }
+
+    .exp-header>div {
+        display: flex;
         flex-direction: column;
         align-items: center;
-        text-align: center;
+    }
+
+    .exp-details {
+        text-align: left;
+        padding-left: 20px;
+        margin-top: 16px;
+    }
+
+    .edu-header {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
         gap: 8px;
     }
 
