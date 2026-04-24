@@ -71,6 +71,28 @@ a {
     pointer-events: auto;
 }
 
+/* Mobile fallback — lightweight animated gradient instead of WebGL */
+@media (max-width: 768px) {
+    #liquid-ether-bg {
+        background: linear-gradient(
+            135deg,
+            #F4F3EF 0%,
+            #EEEDEA 25%,
+            #E8E5DC 50%,
+            #EEEDEA 75%,
+            #F4F3EF 100%
+        );
+        background-size: 400% 400%;
+        animation: mobile-bg-drift 15s ease infinite;
+    }
+
+    @keyframes mobile-bg-drift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+}
+
 /* ================== BORDER GLOW COMPONENT ================== */
 .border-glow-card {
     --edge-proximity: 0;
