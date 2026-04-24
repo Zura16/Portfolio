@@ -48,6 +48,45 @@ const fadeObserver = new IntersectionObserver((entries) => {
 
 fadeElements.forEach(el => fadeObserver.observe(el));
 
+// ================== TYPEWRITER EFFECT ==================
+(function () {
+    const typewriterElements = document.querySelectorAll('[data-typewriter]');
+    if (!typewriterElements.length) return;
+
+    typewriterElements.forEach(el => {
+        const fullText = el.getAttribute('data-typewriter');
+        const delay = parseInt(el.getAttribute('data-typewriter-delay') || '0', 10);
+        el.textContent = '';
+        el.style.minHeight = '1.6em'; // prevent layout shift
+
+        // Create blinking cursor
+        const cursor = document.createElement('span');
+        cursor.className = 'typewriter-cursor';
+        cursor.textContent = '|';
+        el.appendChild(cursor);
+
+        let charIndex = 0;
+        const speed = 28; // ms per character
+
+        function type() {
+            if (charIndex < fullText.length) {
+                // Insert text before cursor
+                el.insertBefore(document.createTextNode(fullText.charAt(charIndex)), cursor);
+                charIndex++;
+                setTimeout(type, speed);
+            } else {
+                // Typing complete — blink cursor a few more times then remove
+                setTimeout(() => {
+                    cursor.classList.add('fade-out');
+                    setTimeout(() => cursor.remove(), 600);
+                }, 1200);
+            }
+        }
+
+        setTimeout(type, delay);
+    });
+})();
+
 // ================== CONTACT FORM ==================
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
@@ -266,12 +305,12 @@ if (contactForm) {
             // Blend noise layers
             float noise = n1 * 0.4 + n2 * 0.3 + n3 * 0.2 + n4 * 0.1;
 
-            // Color palette — deep blues and teals
-            vec3 color1 = vec3(0.02, 0.04, 0.12);   // very dark blue
-            vec3 color2 = vec3(0.05, 0.10, 0.25);   // dark blue
-            vec3 color3 = vec3(0.10, 0.18, 0.40);   // medium blue
-            vec3 color4 = vec3(0.15, 0.30, 0.55);   // bright blue
-            vec3 color5 = vec3(0.08, 0.22, 0.35);   // teal
+            // Color palette — light warm neutrals
+            vec3 color1 = vec3(0.957, 0.953, 0.937);  // #F4F3EF base
+            vec3 color2 = vec3(0.950, 0.945, 0.925);  // slightly warmer
+            vec3 color3 = vec3(0.940, 0.932, 0.910);  // gentle warmth
+            vec3 color4 = vec3(0.935, 0.925, 0.895);  // subtle tan
+            vec3 color5 = vec3(0.948, 0.940, 0.920);  // soft sand
 
             float blend = noise * 0.5 + 0.5;
             vec3 col;
@@ -285,18 +324,18 @@ if (contactForm) {
                 col = mix(color4, color5, (blend - 0.75) / 0.25);
             }
 
-            // Add subtle highlights
+            // Add subtle warm highlights
             float highlight = smoothstep(0.4, 0.8, noise + n4 * 0.5);
-            col += vec3(0.05, 0.12, 0.20) * highlight * 0.4;
+            col += vec3(0.03, 0.02, -0.01) * highlight * 0.4;
 
-            // Vignette — darken edges
+            // Soft vignette — slightly darken edges
             vec2 vigUv = uv * 2.0 - 1.0;
-            float vig = 1.0 - dot(vigUv * 0.6, vigUv * 0.6);
+            float vig = 1.0 - dot(vigUv * 0.5, vigUv * 0.5);
             vig = clamp(vig, 0.0, 1.0);
-            col *= vig;
+            col = mix(col * 0.92, col, vig);
 
-            // Overall dimness to keep it subtle
-            col *= 0.65;
+            // Keep overall brightness high for light theme
+            col *= 1.0;
 
             gl_FragColor = vec4(col, 1.0);
         }

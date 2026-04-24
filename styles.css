@@ -10,18 +10,18 @@
 }
 
 :root {
-    --bg: #000000;
-    --surface: #0a0a0a;
-    --surface-raised: #111111;
-    --border: rgba(255, 255, 255, 0.08);
-    --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.6);
-    --text-muted: rgba(255, 255, 255, 0.35);
-    --accent: #3b82f6;
-    --accent-glow: rgba(59, 130, 246, 0.4);
-    --green: #22c55e;
-    --nav-bg: rgba(20, 20, 20, 0.6);
-    --card-bg: #0a0a0f;
+    --bg: #F4F3EF;
+    --surface: #EEEDEA;
+    --surface-raised: #E8E7E3;
+    --border: rgba(0, 0, 0, 0.07);
+    --text-primary: #1a1a1a;
+    --text-secondary: rgba(0, 0, 0, 0.55);
+    --text-muted: rgba(0, 0, 0, 0.35);
+    --accent: #8B6914;
+    --accent-glow: rgba(139, 105, 20, 0.3);
+    --green: #2d8a4e;
+    --nav-bg: rgba(244, 243, 239, 0.75);
+    --card-bg: #FAFAF8;
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
     /* Border Glow vars */
@@ -80,9 +80,10 @@ a {
     isolation: isolate;
     transform: translate3d(0, 0, 0.01px);
     display: grid;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     background: var(--card-bg);
     overflow: visible;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
 .border-glow-card::before,
@@ -108,15 +109,15 @@ a {
     border: 1px solid transparent;
     background:
         linear-gradient(var(--card-bg) 0 100%) padding-box,
-        linear-gradient(rgb(255 255 255 / 0%) 0% 100%) border-box,
-        radial-gradient(at 80% 55%, hsl(210 80% 60%) 0px, transparent 50%) border-box,
-        radial-gradient(at 69% 34%, hsl(220 90% 70%) 0px, transparent 50%) border-box,
-        radial-gradient(at 8% 6%, hsl(190 80% 60%) 0px, transparent 50%) border-box,
-        radial-gradient(at 41% 38%, hsl(200 100% 64%) 0px, transparent 50%) border-box,
-        radial-gradient(at 86% 85%, hsl(210 80% 74%) 0px, transparent 50%) border-box,
-        radial-gradient(at 82% 18%, hsl(230 70% 65%) 0px, transparent 50%) border-box,
-        radial-gradient(at 51% 4%, hsl(195 80% 72%) 0px, transparent 50%) border-box,
-        linear-gradient(hsl(210 80% 60%) 0 100%) border-box;
+        linear-gradient(rgb(0 0 0 / 0%) 0% 100%) border-box,
+        radial-gradient(at 80% 55%, hsl(40 70% 45%) 0px, transparent 50%) border-box,
+        radial-gradient(at 69% 34%, hsl(35 65% 40%) 0px, transparent 50%) border-box,
+        radial-gradient(at 8% 6%, hsl(45 60% 50%) 0px, transparent 50%) border-box,
+        radial-gradient(at 41% 38%, hsl(38 75% 48%) 0px, transparent 50%) border-box,
+        radial-gradient(at 86% 85%, hsl(42 55% 55%) 0px, transparent 50%) border-box,
+        radial-gradient(at 82% 18%, hsl(30 60% 42%) 0px, transparent 50%) border-box,
+        radial-gradient(at 51% 4%, hsl(48 65% 52%) 0px, transparent 50%) border-box,
+        linear-gradient(hsl(40 70% 45%) 0 100%) border-box;
 
     opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
 
@@ -132,14 +133,14 @@ a {
 .border-glow-card::after {
     border: 1px solid transparent;
     background:
-        radial-gradient(at 80% 55%, hsl(210 80% 60%) 0px, transparent 50%) padding-box,
-        radial-gradient(at 69% 34%, hsl(220 90% 70%) 0px, transparent 50%) padding-box,
-        radial-gradient(at 8% 6%, hsl(190 80% 60%) 0px, transparent 50%) padding-box,
-        radial-gradient(at 41% 38%, hsl(200 100% 64%) 0px, transparent 50%) padding-box,
-        radial-gradient(at 86% 85%, hsl(210 80% 74%) 0px, transparent 50%) padding-box,
-        radial-gradient(at 82% 18%, hsl(230 70% 65%) 0px, transparent 50%) padding-box,
-        radial-gradient(at 51% 4%, hsl(195 80% 72%) 0px, transparent 50%) padding-box,
-        linear-gradient(hsl(210 80% 60%) 0 100%) padding-box;
+        radial-gradient(at 80% 55%, hsl(40 70% 45%) 0px, transparent 50%) padding-box,
+        radial-gradient(at 69% 34%, hsl(35 65% 40%) 0px, transparent 50%) padding-box,
+        radial-gradient(at 8% 6%, hsl(45 60% 50%) 0px, transparent 50%) padding-box,
+        radial-gradient(at 41% 38%, hsl(38 75% 48%) 0px, transparent 50%) padding-box,
+        radial-gradient(at 86% 85%, hsl(42 55% 55%) 0px, transparent 50%) padding-box,
+        radial-gradient(at 82% 18%, hsl(30 60% 42%) 0px, transparent 50%) padding-box,
+        radial-gradient(at 51% 4%, hsl(48 65% 52%) 0px, transparent 50%) padding-box,
+        linear-gradient(hsl(40 70% 45%) 0 100%) padding-box;
 
     mask-image:
         linear-gradient(to bottom, black, black),
@@ -175,19 +176,19 @@ a {
     inset: var(--glow-padding);
     border-radius: inherit;
     box-shadow:
-        inset 0 0 0 1px hsl(210 70% 60% / 100%),
-        inset 0 0 1px 0 hsl(210 70% 60% / 60%),
-        inset 0 0 3px 0 hsl(210 70% 60% / 50%),
-        inset 0 0 6px 0 hsl(210 70% 60% / 40%),
-        inset 0 0 15px 0 hsl(210 70% 60% / 30%),
-        inset 0 0 25px 2px hsl(210 70% 60% / 20%),
-        inset 0 0 50px 2px hsl(210 70% 60% / 10%),
-        0 0 1px 0 hsl(210 70% 60% / 60%),
-        0 0 3px 0 hsl(210 70% 60% / 50%),
-        0 0 6px 0 hsl(210 70% 60% / 40%),
-        0 0 15px 0 hsl(210 70% 60% / 30%),
-        0 0 25px 2px hsl(210 70% 60% / 20%),
-        0 0 50px 2px hsl(210 70% 60% / 10%);
+        inset 0 0 0 1px hsl(40 60% 45% / 100%),
+        inset 0 0 1px 0 hsl(40 60% 45% / 60%),
+        inset 0 0 3px 0 hsl(40 60% 45% / 50%),
+        inset 0 0 6px 0 hsl(40 60% 45% / 40%),
+        inset 0 0 15px 0 hsl(40 60% 45% / 30%),
+        inset 0 0 25px 2px hsl(40 60% 45% / 20%),
+        inset 0 0 50px 2px hsl(40 60% 45% / 10%),
+        0 0 1px 0 hsl(40 60% 45% / 60%),
+        0 0 3px 0 hsl(40 60% 45% / 50%),
+        0 0 6px 0 hsl(40 60% 45% / 40%),
+        0 0 15px 0 hsl(40 60% 45% / 30%),
+        0 0 25px 2px hsl(40 60% 45% / 20%),
+        0 0 50px 2px hsl(40 60% 45% / 10%);
 }
 
 .border-glow-inner {
@@ -215,6 +216,7 @@ a {
     border-radius: 50px;
     z-index: 1000;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .floating-nav.hidden {
@@ -235,12 +237,12 @@ a {
 
 .nav-icon:hover {
     color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .nav-icon.active {
     color: var(--accent);
-    background: rgba(59, 130, 246, 0.15);
+    background: rgba(139, 105, 20, 0.1);
 }
 
 /* ================== LAYOUT ================== */
@@ -285,7 +287,7 @@ a {
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto;
-    border: 3px solid rgba(59, 130, 246, 0.3);
+    border: 3px solid rgba(139, 105, 20, 0.25);
 }
 
 .profile-photo {
@@ -349,7 +351,7 @@ a {
     width: 38px;
     height: 38px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.03);
     border: 1px solid var(--border);
     color: var(--text-secondary);
     transition: all 0.3s ease;
@@ -357,7 +359,7 @@ a {
 
 .social-link:hover {
     color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.07);
     transform: translateY(-2px);
 }
 
@@ -375,7 +377,7 @@ a {
 .section-bg-title {
     font-size: clamp(3rem, 8vw, 6rem);
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.03);
+    color: rgba(0, 0, 0, 0.03);
     position: absolute;
     top: -20px;
     left: 0;
@@ -401,8 +403,8 @@ a {
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    background: rgba(45, 138, 78, 0.08);
+    border: 1px solid rgba(45, 138, 78, 0.18);
     border-radius: 50px;
     font-size: 0.8rem;
     color: var(--green);
@@ -496,7 +498,7 @@ a {
 
 .tag {
     padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.04);
     border: 1px solid var(--border);
     border-radius: 50px;
     font-size: 0.7rem;
@@ -600,8 +602,8 @@ a {
 
 .project-tags span {
     padding: 4px 12px;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: rgba(139, 105, 20, 0.08);
+    border: 1px solid rgba(139, 105, 20, 0.15);
     border-radius: 50px;
     font-size: 0.75rem;
     color: var(--accent);
@@ -765,8 +767,8 @@ a {
 
 .edu-badge {
     padding: 4px 12px;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    background: rgba(45, 138, 78, 0.08);
+    border: 1px solid rgba(45, 138, 78, 0.18);
     border-radius: 50px;
     font-size: 0.75rem;
     color: var(--green);
@@ -823,7 +825,7 @@ a {
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 105, 20, 0.1);
 }
 
 .form-group textarea {
@@ -848,9 +850,9 @@ a {
 }
 
 .submit-btn:hover {
-    background: #2563eb;
+    background: #6d5210;
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 10px 30px rgba(139, 105, 20, 0.2);
 }
 
 .contact-links {
@@ -875,7 +877,7 @@ a {
 .contact-link-item:hover {
     background: var(--surface-raised);
     color: var(--text-primary);
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(0, 0, 0, 0.12);
     transform: translateX(4px);
 }
 
@@ -898,6 +900,26 @@ a {
 .fade-in.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* ================== TYPEWRITER CURSOR ================== */
+.typewriter-cursor {
+    display: inline;
+    font-weight: 300;
+    color: var(--accent);
+    animation: blink-cursor 0.7s step-end infinite;
+    margin-left: 1px;
+}
+
+.typewriter-cursor.fade-out {
+    animation: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+@keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 /* ================== RESPONSIVE ================== */
