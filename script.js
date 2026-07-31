@@ -728,3 +728,94 @@ if (contactForm) {
         }
     });
 })();
+
+// ================== SPLASH CURSOR FLUID SPLAT INTERACTION ==================
+(function initSplashCursorInteraction() {
+    let canvas = document.getElementById('splash-cursor-canvas');
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.id = 'splash-cursor-canvas';
+        canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:40;display:block;';
+        document.body.appendChild(canvas);
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const colors = ['#8b6914', '#d97706', '#b45309', '#f59e0b', '#78350f'];
+
+    function createSplat(x, y, count = 12, force = 8) {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = (Math.random() * 0.8 + 0.2) * force;
+            particles.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                radius: Math.random() * 14 + 6,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: 0.7,
+                life: 1.0,
+                decay: Math.random() * 0.02 + 0.015
+            });
+        }
+    }
+
+    let lastX = 0, lastY = 0;
+    window.addEventListener('mousemove', (e) => {
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 15) {
+            createSplat(e.clientX, e.clientY, 3, dist * 0.15);
+            lastX = e.clientX;
+            lastY = e.clientY;
+        }
+    });
+
+    window.addEventListener('click', (e) => {
+        createSplat(e.clientX, e.clientY, 24, 12);
+    });
+
+    function renderSplats() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= 0.95; // velocity dissipation
+            p.vy *= 0.95;
+            p.radius *= 0.98;
+            p.alpha -= p.decay;
+
+            if (p.alpha <= 0 || p.radius < 0.5) {
+                particles.splice(i, 1);
+                continue;
+            }
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur = 10;
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+            ctx.shadowBlur = 0;
+        }
+
+        requestAnimationFrame(renderSplats);
+    }
+    renderSplats();
+})();
