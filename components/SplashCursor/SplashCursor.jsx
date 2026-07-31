@@ -17,7 +17,7 @@ function SplashCursor({
   BACK_COLOR = { r: 0.95, g: 0.95, b: 0.93 },
   TRANSPARENT = true,
   RAINBOW_MODE = false,
-  COLOR = '#8b6914'
+  COLOR = '#E1C16E'
 }) {
   const canvasRef = useRef(null);
   const animationFrameId = useRef(null);
