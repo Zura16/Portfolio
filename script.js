@@ -646,55 +646,90 @@ if (contactForm) {
     });
 })();
 
-// ================== CUSTOM POINTER CURSOR ==================
-(function initCustomCursor() {
+// ================== MAGNETIC FLUID GLOW ORB CURSOR ==================
+(function initMagneticGlowOrbCursor() {
     if (window.innerWidth <= 768) return;
 
-    let cursor = document.getElementById('custom-cursor');
-    if (!cursor) {
-        cursor = document.createElement('div');
-        cursor.id = 'custom-cursor';
-        cursor.className = 'custom-cursor';
-        cursor.innerHTML = `
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4.5 3.5L24 12C25.5 12.6 25.5 14.8 23.9 15.3L15.6 18.2C15.1 18.4 14.7 18.8 14.5 19.3L11.6 27.6C11.1 29.2 8.9 29.2 8.3 27.7L2.2 6.8C1.6 5 3 3 4.5 3.5Z" 
-                      fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        `;
-        document.body.appendChild(cursor);
+    let dot = document.getElementById('orb-cursor-dot');
+    if (!dot) {
+        dot = document.createElement('div');
+        dot.id = 'orb-cursor-dot';
+        dot.className = 'orb-cursor-dot';
+        document.body.appendChild(dot);
+    }
+
+    let aura = document.getElementById('magnetic-aura-ring');
+    if (!aura) {
+        aura = document.createElement('div');
+        aura.id = 'magnetic-aura-ring';
+        aura.className = 'magnetic-aura-ring';
+        document.body.appendChild(aura);
     }
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    let currX = mouseX;
-    let currY = mouseY;
+    let dotX = mouseX, dotY = mouseY;
+    let auraX = mouseX, auraY = mouseY;
+    let targetAuraX = mouseX, targetAuraY = mouseY;
+    let isSnapped = false;
+    let snappedElem = null;
 
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
     });
 
-    function renderCursor() {
-        currX += (mouseX - currX) * 0.25;
-        currY += (mouseY - currY) * 0.25;
-
-        if (cursor) {
-            cursor.style.transform = `translate3d(${currX}px, ${currY}px, 0)`;
-        }
-        requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-
     const interactiveSelectors = 'a, button, .project-card, .border-glow-card, .pill, .contact-link-item';
+
     document.addEventListener('mouseover', (e) => {
-        if (e.target.closest(interactiveSelectors)) {
-            cursor.classList.add('hovering');
+        const target = e.target.closest(interactiveSelectors);
+        if (target) {
+            snappedElem = target;
+            isSnapped = true;
+            dot.classList.add('hovering');
+            aura.classList.add('snapped');
         }
     });
 
     document.addEventListener('mouseout', (e) => {
-        if (e.target.closest(interactiveSelectors)) {
-            cursor.classList.remove('hovering');
+        const target = e.target.closest(interactiveSelectors);
+        if (target && target === snappedElem) {
+            snappedElem = null;
+            isSnapped = false;
+            dot.classList.remove('hovering');
+            aura.classList.remove('snapped');
+            aura.style.width = '44px';
+            aura.style.height = '44px';
+            aura.style.borderRadius = '50%';
         }
     });
+
+    function renderOrbCursor() {
+        // Dot tracks mouse quickly
+        dotX += (mouseX - dotX) * 0.35;
+        dotY += (mouseY - dotY) * 0.35;
+        dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+
+        // Aura magnetic logic
+        if (isSnapped && snappedElem) {
+            const rect = snappedElem.getBoundingClientRect();
+            targetAuraX = rect.left + rect.width / 2;
+            targetAuraY = rect.top + rect.height / 2;
+
+            aura.style.width = `${rect.width + 12}px`;
+            aura.style.height = `${rect.height + 12}px`;
+            const computedStyle = window.getComputedStyle(snappedElem);
+            aura.style.borderRadius = computedStyle.borderRadius || '16px';
+        } else {
+            targetAuraX = mouseX;
+            targetAuraY = mouseY;
+        }
+
+        auraX += (targetAuraX - auraX) * 0.16;
+        auraY += (targetAuraY - auraY) * 0.16;
+        aura.style.transform = `translate3d(${auraX}px, ${auraY}px, 0) translate(-50%, -50%)`;
+
+        requestAnimationFrame(renderOrbCursor);
+    }
+    requestAnimationFrame(renderOrbCursor);
 })();
