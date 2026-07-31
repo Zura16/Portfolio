@@ -1112,10 +1112,10 @@ if (contactForm) {
 
     function generateColor() {
         const themeColors = [
-            { r: 0.309, g: 0.265, b: 0.151 }, // Champagne Gold (#E1C16E)
-            { r: 0.325, g: 0.293, b: 0.202 }, // Luminous Light Gold (#ECD593)
-            { r: 0.294, g: 0.245, b: 0.115 }, // Rich Champagne Gold (#D6B254)
-            { r: 0.330, g: 0.303, b: 0.216 }  // Soft Warm Champagne Glow (#F0DC9D)
+            { r: 0.299, g: 0.219, b: 0.149 }, // Sandalwood Amber (#DAA06D)
+            { r: 0.320, g: 0.242, b: 0.171 }, // Warm Golden Ochre (#E6AE7B)
+            { r: 0.280, g: 0.201, b: 0.129 }, // Rich Sandalwood (#CC925E)
+            { r: 0.332, g: 0.264, b: 0.202 }  // Soft Terracotta Amber Glow (#F0BF92)
         ];
         return themeColors[Math.floor(Math.random() * themeColors.length)];
     }
