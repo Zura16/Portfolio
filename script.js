@@ -474,57 +474,77 @@ if (contactForm) {
         void main() {
             vec2 uv = vUv;
             vec2 aspect = vec2(iResolution.x / iResolution.y, 1.0);
-
             float t = iTime * 0.15;
 
-            // FluidGlass Lens Refraction Distortion around mouse pointer
-            vec2 st = (uv - vec2(0.5)) * aspect;
+            // React Bits FluidGlass Lens physics: IOR = 1.15, Chromatic Aberration = 0.1
             vec2 m = (iMouse / iResolution.xy - vec2(0.5)) * aspect;
+            vec2 st = (uv - vec2(0.5)) * aspect;
             float dist = length(st - m);
-            float lensRadius = 0.25;
+            float lensRadius = 0.24;
+
+            vec2 refOffset = vec2(0.0);
+            float chromatic = 0.0;
+            float fresnel = 0.0;
 
             if (dist < lensRadius) {
-                float factor = smoothstep(lensRadius, 0.0, dist);
-                vec2 offset = (st - m) * factor * 0.16;
-                uv += offset;
+                float normDist = dist / lensRadius;
+                float z = sqrt(max(0.0, 1.0 - normDist * normDist));
+                vec2 normal2D = (st - m) / lensRadius;
+
+                // Transmission & Refraction displacement (IOR 1.15)
+                float ior = 1.15;
+                float refractionFactor = (1.0 - 1.0 / ior) * z;
+                refOffset = -normal2D * refractionFactor * 0.22;
+
+                // Chromatic Aberration RGB dispersion near lens edge (0.1)
+                chromatic = smoothstep(0.2, 1.0, normDist) * 0.015;
+
+                // Fresnel rim glare
+                fresnel = pow(normDist, 3.5) * 0.45;
             }
 
-            // Multiple layers of noise at different scales
-            float n1 = cnoise(vec3(uv * aspect * 2.0, t));
-            float n2 = cnoise(vec3(uv * aspect * 3.5 + 5.0, t * 1.3 + 10.0));
-            float n3 = cnoise(vec3(uv * aspect * 1.2 - 3.0, t * 0.7 - 5.0));
-            float n4 = cnoise(vec3(uv * aspect * 5.0 + 8.0, t * 0.5 + 3.0));
+            // Sample RGB channels with Chromatic Aberration dispersion offsets
+            vec2 uvR = uv + refOffset * (1.0 + chromatic);
+            vec2 uvG = uv + refOffset;
+            vec2 uvB = uv + refOffset * (1.0 - chromatic);
 
-            // Blend noise layers
-            float noise = n1 * 0.4 + n2 * 0.3 + n3 * 0.2 + n4 * 0.1;
+            float n1R = cnoise(vec3(uvR * aspect * 2.0, t));
+            float n1G = cnoise(vec3(uvG * aspect * 2.0, t));
+            float n1B = cnoise(vec3(uvB * aspect * 2.0, t));
+
+            float n2 = cnoise(vec3((uv + refOffset) * aspect * 3.5 + 5.0, t * 1.3 + 10.0));
+            float n3 = cnoise(vec3((uv + refOffset) * aspect * 1.2 - 3.0, t * 0.7 - 5.0));
+            float n4 = cnoise(vec3((uv + refOffset) * aspect * 5.0 + 8.0, t * 0.5 + 3.0));
+
+            float noiseR = n1R * 0.4 + n2 * 0.3 + n3 * 0.2 + n4 * 0.1;
+            float noiseG = n1G * 0.4 + n2 * 0.3 + n3 * 0.2 + n4 * 0.1;
+            float noiseB = n1B * 0.4 + n2 * 0.3 + n3 * 0.2 + n4 * 0.1;
 
             // Color palette — light warm neutrals
-            vec3 color1 = vec3(0.957, 0.953, 0.937);  // #F4F3EF base
-            vec3 color2 = vec3(0.950, 0.945, 0.925);  // slightly warmer
-            vec3 color3 = vec3(0.940, 0.932, 0.910);  // gentle warmth
-            vec3 color4 = vec3(0.935, 0.925, 0.895);  // subtle tan
-            vec3 color5 = vec3(0.948, 0.940, 0.920);  // soft sand
+            vec3 color1 = vec3(0.957, 0.953, 0.937);
+            vec3 color2 = vec3(0.950, 0.945, 0.925);
+            vec3 color3 = vec3(0.940, 0.932, 0.910);
+            vec3 color4 = vec3(0.935, 0.925, 0.895);
+            vec3 color5 = vec3(0.948, 0.940, 0.920);
 
-            float blend = noise * 0.5 + 0.5;
-            vec3 col;
-            if (blend < 0.25) {
-                col = mix(color1, color2, blend / 0.25);
-            } else if (blend < 0.50) {
-                col = mix(color2, color3, (blend - 0.25) / 0.25);
-            } else if (blend < 0.75) {
-                col = mix(color3, color4, (blend - 0.50) / 0.25);
-            } else {
-                col = mix(color4, color5, (blend - 0.75) / 0.25);
-            }
+            float blendR = noiseR * 0.5 + 0.5;
+            float blendG = noiseG * 0.5 + 0.5;
+            float blendB = noiseB * 0.5 + 0.5;
 
-            // Add subtle warm highlights
-            float highlight = smoothstep(0.4, 0.8, noise + n4 * 0.5);
+            vec3 colR = mix(color1, color4, blendR);
+            vec3 colG = mix(color1, color4, blendG);
+            vec3 colB = mix(color1, color4, blendB);
+
+            vec3 col = vec3(colR.r, colG.g, colB.b);
+
+            // Add warm highlights & Fresnel rim light
+            float highlight = smoothstep(0.4, 0.8, noiseG + n4 * 0.5);
             col += vec3(0.03, 0.02, -0.01) * highlight * 0.4;
+            col += vec3(0.18, 0.18, 0.22) * fresnel; // Glass Fresnel rim glare
 
-            // Soft vignette — slightly darken edges
+            // Soft vignette
             vec2 vigUv = vUv * 2.0 - 1.0;
-            float vig = 1.0 - dot(vigUv * 0.5, vigUv * 0.5);
-            vig = clamp(vig, 0.0, 1.0);
+            float vig = clamp(1.0 - dot(vigUv * 0.5, vigUv * 0.5), 0.0, 1.0);
             col = mix(col * 0.92, col, vig);
 
             gl_FragColor = vec4(col, 1.0);
@@ -549,14 +569,24 @@ if (contactForm) {
     const mesh = new THREE.Mesh(plane, material);
     scene.add(mesh);
 
+    let targetMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let currentMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
     // Track mouse movement for FluidGlass lens refraction
     window.addEventListener('mousemove', (e) => {
-        uniforms.iMouse.value.set(e.clientX, window.innerHeight - e.clientY);
+        targetMouse.x = e.clientX;
+        targetMouse.y = window.innerHeight - e.clientY;
     });
 
     let animFrame;
     function animate() {
         animFrame = requestAnimationFrame(animate);
+
+        // maath damp3 0.15 easing for fluid glass pointer movement
+        currentMouse.x += (targetMouse.x - currentMouse.x) * 0.15;
+        currentMouse.y += (targetMouse.y - currentMouse.y) * 0.15;
+        uniforms.iMouse.value.set(currentMouse.x, currentMouse.y);
+
         uniforms.iTime.value += 0.016;
         renderer.render(scene, camera);
     }
