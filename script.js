@@ -649,3 +649,52 @@ if (contactForm) {
         caption.style.opacity = '0';
     });
 })();
+
+// ================== FLUID GLASS CURSOR LENS ==================
+(function initFluidGlassCursor() {
+    if (window.innerWidth <= 768) return;
+
+    let cursor = document.getElementById('fluid-glass-cursor');
+    if (!cursor) {
+        cursor = document.createElement('div');
+        cursor.id = 'fluid-glass-cursor';
+        cursor.className = 'fluid-glass-cursor';
+        document.body.appendChild(cursor);
+    }
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let currX = mouseX;
+    let currY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function renderCursor() {
+        // Easing damping damp3 equivalent
+        currX += (mouseX - currX) * 0.18;
+        currY += (mouseY - currY) * 0.18;
+
+        if (cursor) {
+            cursor.style.transform = `translate3d(${currX}px, ${currY}px, 0) translate(-50%, -50%)`;
+        }
+        requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+
+    // Expand lens on hovering interactive elements
+    const interactiveSelectors = 'a, button, .project-card, .border-glow-card, .pill, .contact-link-item';
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+            cursor.classList.add('hovering');
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+            cursor.classList.remove('hovering');
+        }
+    });
+})();

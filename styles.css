@@ -35,6 +35,47 @@
     --fill-opacity: 0.5;
 }
 
+/* ================== FLUID GLASS CURSOR LENS ================== */
+.fluid-glass-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    backdrop-filter: blur(12px) contrast(1.15) brightness(1.06);
+    -webkit-backdrop-filter: blur(12px) contrast(1.15) brightness(1.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12),
+        inset 0 0 15px rgba(255, 255, 255, 0.4),
+        0 0 24px rgba(139, 105, 20, 0.25);
+    transform: translate3d(-50%, -50%, 0);
+    transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+    display: none;
+}
+
+@media (min-width: 769px) {
+    .fluid-glass-cursor {
+        display: block;
+    }
+}
+
+.fluid-glass-cursor.hovering {
+    width: 84px;
+    height: 84px;
+    backdrop-filter: blur(16px) contrast(1.22) brightness(1.1);
+    -webkit-backdrop-filter: blur(16px) contrast(1.22) brightness(1.1);
+    border-color: rgba(139, 105, 20, 0.75);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.18),
+        inset 0 0 20px rgba(255, 255, 255, 0.6),
+        0 0 32px rgba(139, 105, 20, 0.4);
+}
+
 html {
     scroll-behavior: smooth;
 }
