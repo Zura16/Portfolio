@@ -680,15 +680,21 @@ if (contactForm) {
     });
 })();
 
-// ================== FLUID GLASS CURSOR LENS ==================
-(function initFluidGlassCursor() {
+// ================== CUSTOM POINTER CURSOR ==================
+(function initCustomCursor() {
     if (window.innerWidth <= 768) return;
 
-    let cursor = document.getElementById('fluid-glass-cursor');
+    let cursor = document.getElementById('custom-cursor');
     if (!cursor) {
         cursor = document.createElement('div');
-        cursor.id = 'fluid-glass-cursor';
-        cursor.className = 'fluid-glass-cursor';
+        cursor.id = 'custom-cursor';
+        cursor.className = 'custom-cursor';
+        cursor.innerHTML = `
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.5 3.5L24 12C25.5 12.6 25.5 14.8 23.9 15.3L15.6 18.2C15.1 18.4 14.7 18.8 14.5 19.3L11.6 27.6C11.1 29.2 8.9 29.2 8.3 27.7L2.2 6.8C1.6 5 3 3 4.5 3.5Z" 
+                      fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
         document.body.appendChild(cursor);
     }
 
@@ -703,18 +709,16 @@ if (contactForm) {
     });
 
     function renderCursor() {
-        // Easing damping damp3 equivalent
-        currX += (mouseX - currX) * 0.18;
-        currY += (mouseY - currY) * 0.18;
+        currX += (mouseX - currX) * 0.25;
+        currY += (mouseY - currY) * 0.25;
 
         if (cursor) {
-            cursor.style.transform = `translate3d(${currX}px, ${currY}px, 0) translate(-50%, -50%)`;
+            cursor.style.transform = `translate3d(${currX}px, ${currY}px, 0)`;
         }
         requestAnimationFrame(renderCursor);
     }
     requestAnimationFrame(renderCursor);
 
-    // Expand lens on hovering interactive elements
     const interactiveSelectors = 'a, button, .project-card, .border-glow-card, .pill, .contact-link-item';
     document.addEventListener('mouseover', (e) => {
         if (e.target.closest(interactiveSelectors)) {
