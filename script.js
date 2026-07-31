@@ -284,42 +284,56 @@ if (contactForm) {
     });
 }
 
-// ================== BORDER GLOW EFFECT ==================
+// ================== BORDER GLOW EFFECT (OPTIMIZED) ==================
 (function () {
     const glowCards = document.querySelectorAll('.border-glow-card');
     if (!glowCards.length) return;
 
     let mouseX = 0, mouseY = 0;
     let rafId = null;
+    let cardRects = new Map();
 
-    function updateAllCards() {
+    function updateCardRects() {
         glowCards.forEach(card => {
             const rect = card.getBoundingClientRect();
-            const padding = 40; // glow-padding
+            cardRects.set(card, {
+                top: rect.top,
+                left: rect.left,
+                right: rect.right,
+                bottom: rect.bottom,
+                width: rect.width,
+                height: rect.height,
+                centerX: rect.left + rect.width / 2,
+                centerY: rect.top + rect.height / 2
+            });
+        });
+    }
 
-            // Check if card is in viewport
-            if (rect.bottom < -padding || rect.top > window.innerHeight + padding ||
-                rect.right < -padding || rect.left > window.innerWidth + padding) {
+    updateCardRects();
+    window.addEventListener('scroll', updateCardRects, { passive: true });
+    window.addEventListener('resize', updateCardRects, { passive: true });
+
+    function updateAllCards() {
+        const padding = 40;
+        const vh = window.innerHeight;
+        const vw = window.innerWidth;
+
+        cardRects.forEach((rect, card) => {
+            if (rect.bottom < -padding || rect.top > vh + padding ||
+                rect.right < -padding || rect.left > vw + padding) {
                 return;
             }
 
-            // Calculate proximity (0 = far, 100 = touching)
-            const cardCenterX = rect.left + rect.width / 2;
-            const cardCenterY = rect.top + rect.height / 2;
-
-            // Distance from cursor to card edge
             const closestX = Math.max(rect.left, Math.min(mouseX, rect.right));
             const closestY = Math.max(rect.top, Math.min(mouseY, rect.bottom));
             const distX = mouseX - closestX;
             const distY = mouseY - closestY;
             const distance = Math.sqrt(distX * distX + distY * distY);
 
-            // Convert distance to proximity (0 to 100)
             const maxDist = 300;
             const proximity = Math.max(0, Math.min(100, ((maxDist - distance) / maxDist) * 100));
 
-            // Calculate angle from card center to cursor
-            const angle = Math.atan2(mouseY - cardCenterY, mouseX - cardCenterX);
+            const angle = Math.atan2(mouseY - rect.centerY, mouseX - rect.centerX);
             const angleDeg = ((angle * 180 / Math.PI) + 360) % 360;
 
             card.style.setProperty('--edge-proximity', proximity.toFixed(1));
@@ -336,7 +350,7 @@ if (contactForm) {
                 rafId = null;
             });
         }
-    });
+    }, { passive: true });
 
     // Sweep animation on load
     function playSweepAnimation() {
@@ -347,11 +361,11 @@ if (contactForm) {
 
         function animate(now) {
             const progress = Math.min((now - start) / duration, 1);
-            const easedProgress = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
 
             glowCards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+                const rect = cardRects.get(card);
+                if (!rect || rect.bottom < 0 || rect.top > window.innerHeight) return;
 
                 const sweepAngle = easedProgress * 360;
                 card.style.setProperty('--cursor-angle', sweepAngle + 'deg');
@@ -361,16 +375,19 @@ if (contactForm) {
             if (progress < 1) {
                 requestAnimationFrame(animate);
             } else {
-                glowCards.forEach(card => {
-                    card.classList.remove('sweep-active');
-                    card.style.setProperty('--edge-proximity', '0');
-                });
+                glowCards.forEach(card => card.classList.remove('sweep-active'));
+                updateCardRects();
             }
         }
+
         requestAnimationFrame(animate);
     }
 
-    setTimeout(playSweepAnimation, 500);
+    if (document.readyState === 'complete') {
+        setTimeout(playSweepAnimation, 300);
+    } else {
+        window.addEventListener('load', () => setTimeout(playSweepAnimation, 300));
+    }
 })();
 
 // ================== LIQUID ETHER WEBGL BACKGROUND ==================
