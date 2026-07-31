@@ -241,11 +241,30 @@ a {
     }
 }
 
+/* ================== PILL NAV ================== */
+.pill-nav-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .pill-nav-container {
+        width: 100%;
+        left: 0;
+        transform: none;
+        top: 16px;
+    }
+}
+
 .pill-nav {
-    --base: rgba(14, 16, 22, 0.85);
-    --pill-bg: rgba(255, 255, 255, 0.05);
+    --base: rgba(244, 243, 239, 0.88);
+    --pill-bg: rgba(0, 0, 0, 0.04);
     --hover-text: #ffffff;
-    --pill-text: #94a3b8;
+    --pill-text: rgba(0, 0, 0, 0.65);
     --nav-h: 44px;
     --logo: 38px;
     --pill-pad-x: 20px;
@@ -273,10 +292,10 @@ a {
     height: var(--nav-h);
     background: var(--base);
     border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .pill-logo {
@@ -284,8 +303,8 @@ a {
     height: var(--nav-h);
     border-radius: 50%;
     background: var(--base);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     padding: 3px;
     display: inline-flex;
     align-items: center;
@@ -293,8 +312,8 @@ a {
     overflow: hidden;
     text-decoration: none;
     cursor: pointer;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .pill-logo img {
@@ -381,7 +400,7 @@ a {
 }
 
 .pill.is-active {
-    color: #ffffff;
+    color: var(--text-primary, #1a1a1a);
 }
 
 .pill.is-active::after {
@@ -420,8 +439,8 @@ a {
     height: var(--nav-h);
     border-radius: 50%;
     background: var(--base);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     display: none;
     flex-direction: column;
     align-items: center;
@@ -430,8 +449,8 @@ a {
     cursor: pointer;
     padding: 0;
     position: relative;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 @media (max-width: 768px) {
@@ -443,7 +462,7 @@ a {
 .hamburger-line {
     width: 16px;
     height: 2px;
-    background: var(--pill-text);
+    background: var(--text-primary, #1a1a1a);
     border-radius: 1px;
     transition: all 0.01s ease;
     transform-origin: center;
@@ -454,10 +473,10 @@ a {
     top: 3.5rem;
     left: 1rem;
     right: 1rem;
-    background: var(--base);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(244, 243, 239, 0.95);
+    border: 1px solid var(--border);
     border-radius: 20px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     z-index: 998;
@@ -479,8 +498,8 @@ a {
 .mobile-menu-popover .mobile-menu-link {
     display: block;
     padding: 12px 20px;
-    color: var(--pill-text);
-    background-color: var(--pill-bg);
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
