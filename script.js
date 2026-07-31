@@ -401,6 +401,7 @@ if (contactForm) {
         precision highp float;
         uniform float iTime;
         uniform vec2 iResolution;
+        uniform vec2 iMouse;
         varying vec2 vUv;
 
         vec4 permute(vec4 x) {
@@ -476,6 +477,18 @@ if (contactForm) {
 
             float t = iTime * 0.15;
 
+            // FluidGlass Lens Refraction Distortion around mouse pointer
+            vec2 st = (uv - vec2(0.5)) * aspect;
+            vec2 m = (iMouse / iResolution.xy - vec2(0.5)) * aspect;
+            float dist = length(st - m);
+            float lensRadius = 0.25;
+
+            if (dist < lensRadius) {
+                float factor = smoothstep(lensRadius, 0.0, dist);
+                vec2 offset = (st - m) * factor * 0.16;
+                uv += offset;
+            }
+
             // Multiple layers of noise at different scales
             float n1 = cnoise(vec3(uv * aspect * 2.0, t));
             float n2 = cnoise(vec3(uv * aspect * 3.5 + 5.0, t * 1.3 + 10.0));
@@ -509,13 +522,10 @@ if (contactForm) {
             col += vec3(0.03, 0.02, -0.01) * highlight * 0.4;
 
             // Soft vignette — slightly darken edges
-            vec2 vigUv = uv * 2.0 - 1.0;
+            vec2 vigUv = vUv * 2.0 - 1.0;
             float vig = 1.0 - dot(vigUv * 0.5, vigUv * 0.5);
             vig = clamp(vig, 0.0, 1.0);
             col = mix(col * 0.92, col, vig);
-
-            // Keep overall brightness high for light theme
-            col *= 1.0;
 
             gl_FragColor = vec4(col, 1.0);
         }
@@ -523,7 +533,8 @@ if (contactForm) {
 
     const uniforms = {
         iTime: { value: 0 },
-        iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+        iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+        iMouse: { value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2) }
     };
 
     const material = new THREE.ShaderMaterial({
@@ -537,6 +548,11 @@ if (contactForm) {
     const plane = new THREE.PlaneGeometry(2, 2);
     const mesh = new THREE.Mesh(plane, material);
     scene.add(mesh);
+
+    // Track mouse movement for FluidGlass lens refraction
+    window.addEventListener('mousemove', (e) => {
+        uniforms.iMouse.value.set(e.clientX, window.innerHeight - e.clientY);
+    });
 
     let animFrame;
     function animate() {
