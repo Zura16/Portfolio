@@ -646,76 +646,55 @@ if (contactForm) {
     });
 })();
 
-// ================== VELOCITY MORPHING GLASS TEARDROP CURSOR ==================
-(function initVelocityGlassDropletCursor() {
+// ================== CUSTOM POINTER CURSOR ==================
+(function initCustomCursor() {
     if (window.innerWidth <= 768) return;
 
-    let droplet = document.getElementById('velocity-glass-droplet');
-    if (!droplet) {
-        droplet = document.createElement('div');
-        droplet.id = 'velocity-glass-droplet';
-        droplet.className = 'velocity-glass-droplet';
-        document.body.appendChild(droplet);
+    let cursor = document.getElementById('custom-cursor');
+    if (!cursor) {
+        cursor = document.createElement('div');
+        cursor.id = 'custom-cursor';
+        cursor.className = 'custom-cursor';
+        cursor.innerHTML = `
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.5 3.5L24 12C25.5 12.6 25.5 14.8 23.9 15.3L15.6 18.2C15.1 18.4 14.7 18.8 14.5 19.3L11.6 27.6C11.1 29.2 8.9 29.2 8.3 27.7L2.2 6.8C1.6 5 3 3 4.5 3.5Z" 
+                      fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
+        document.body.appendChild(cursor);
     }
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let currX = mouseX;
     let currY = mouseY;
-    let prevX = mouseX;
-    let prevY = mouseY;
-    let angle = 0;
-    let speed = 0;
 
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
     });
 
-    function renderDroplet() {
-        currX += (mouseX - currX) * 0.22;
-        currY += (mouseY - currY) * 0.22;
+    function renderCursor() {
+        currX += (mouseX - currX) * 0.25;
+        currY += (mouseY - currY) * 0.25;
 
-        // Calculate velocity vector
-        const vx = currX - prevX;
-        const vy = currY - prevY;
-        prevX = currX;
-        prevY = currY;
-
-        const currentSpeed = Math.sqrt(vx * vx + vy * vy);
-        speed += (currentSpeed - speed) * 0.2;
-
-        if (speed > 0.5) {
-            angle = Math.atan2(vy, vx) * (180 / Math.PI);
+        if (cursor) {
+            cursor.style.transform = `translate3d(${currX}px, ${currY}px, 0)`;
         }
-
-        // Teardrop elongation based on velocity
-        const scaleX = 1 + Math.min(speed * 0.045, 0.85);
-        const scaleY = Math.max(0.55, 1 - speed * 0.025);
-
-        // Dynamic teardrop shape when moving fast
-        if (speed > 2.5) {
-            droplet.style.borderRadius = '50% 15% 50% 50%';
-        } else {
-            droplet.style.borderRadius = '50%';
-        }
-
-        droplet.style.transform = `translate3d(${currX}px, ${currY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${scaleX}, ${scaleY})`;
-
-        requestAnimationFrame(renderDroplet);
+        requestAnimationFrame(renderCursor);
     }
-    requestAnimationFrame(renderDroplet);
+    requestAnimationFrame(renderCursor);
 
     const interactiveSelectors = 'a, button, .project-card, .border-glow-card, .pill, .contact-link-item';
     document.addEventListener('mouseover', (e) => {
         if (e.target.closest(interactiveSelectors)) {
-            droplet.classList.add('hovering');
+            cursor.classList.add('hovering');
         }
     });
 
     document.addEventListener('mouseout', (e) => {
         if (e.target.closest(interactiveSelectors)) {
-            droplet.classList.remove('hovering');
+            cursor.classList.remove('hovering');
         }
     });
 })();
