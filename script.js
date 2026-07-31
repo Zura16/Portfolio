@@ -10,8 +10,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ================== ACTIVE NAV HIGHLIGHTING ==================
-const sections = document.querySelectorAll('.section');
-const navIcons = document.querySelectorAll('.nav-icon');
+const sections = document.querySelectorAll('.section, #hero');
+const navPills = document.querySelectorAll('.pill, .mobile-menu-link');
 
 const observerOptions = {
     root: null,
@@ -23,10 +23,10 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const id = entry.target.getAttribute('id');
-            navIcons.forEach(icon => {
-                icon.classList.remove('active');
-                if (icon.getAttribute('href') === `#${id}`) {
-                    icon.classList.add('active');
+            navPills.forEach(pill => {
+                pill.classList.remove('is-active');
+                if (pill.getAttribute('href') === `#${id}`) {
+                    pill.classList.add('is-active');
                 }
             });
         }
@@ -34,6 +34,186 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 sections.forEach(section => observer.observe(section));
+
+// ================== PILLNAV GSAP ANIMATIONS ==================
+(function initPillNav() {
+    if (typeof gsap === 'undefined') return;
+
+    const circles = document.querySelectorAll('.pill .hover-circle');
+    const tlRefs = [];
+    const activeTweenRefs = [];
+    const ease = 'power3.easeOut';
+
+    function layout() {
+        circles.forEach((circle, index) => {
+            const pill = circle.parentElement;
+            if (!pill) return;
+
+            const rect = pill.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+            if (w === 0 || h === 0) return;
+
+            const R = ((w * w) / 4 + h * h) / (2 * h);
+            const D = Math.ceil(2 * R) + 2;
+            const delta = Math.ceil(R - Math.sqrt(Math.max(0, R * R - (w * w) / 4))) + 1;
+            const originY = D - delta;
+
+            circle.style.width = `${D}px`;
+            circle.style.height = `${D}px`;
+            circle.style.bottom = `-${delta}px`;
+
+            gsap.set(circle, {
+                xPercent: -50,
+                scale: 0,
+                transformOrigin: `50% ${originY}px`
+            });
+
+            const label = pill.querySelector('.pill-label');
+            const white = pill.querySelector('.pill-label-hover');
+
+            if (label) gsap.set(label, { y: 0 });
+            if (white) gsap.set(white, { y: h + 12, opacity: 0 });
+
+            if (tlRefs[index]) tlRefs[index].kill();
+            const tl = gsap.timeline({ paused: true });
+
+            tl.to(circle, { scale: 1.2, xPercent: -50, duration: 2, ease, overwrite: 'auto' }, 0);
+
+            if (label) {
+                tl.to(label, { y: -(h + 8), duration: 2, ease, overwrite: 'auto' }, 0);
+            }
+
+            if (white) {
+                gsap.set(white, { y: Math.ceil(h + 100), opacity: 0 });
+                tl.to(white, { y: 0, opacity: 1, duration: 2, ease, overwrite: 'auto' }, 0);
+            }
+
+            tlRefs[index] = tl;
+        });
+    }
+
+    layout();
+    window.addEventListener('resize', layout);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(layout).catch(() => {});
+    }
+
+    // Attach mouseenter and mouseleave to each .pill
+    const pills = document.querySelectorAll('.pill-list .pill');
+    pills.forEach((pill, i) => {
+        pill.addEventListener('mouseenter', () => {
+            const tl = tlRefs[i];
+            if (!tl) return;
+            if (activeTweenRefs[i]) activeTweenRefs[i].kill();
+            activeTweenRefs[i] = tl.tweenTo(tl.duration(), {
+                duration: 0.3,
+                ease: ease,
+                overwrite: 'auto'
+            });
+        });
+
+        pill.addEventListener('mouseleave', () => {
+            const tl = tlRefs[i];
+            if (!tl) return;
+            if (activeTweenRefs[i]) activeTweenRefs[i].kill();
+            activeTweenRefs[i] = tl.tweenTo(0, {
+                duration: 0.2,
+                ease: ease,
+                overwrite: 'auto'
+            });
+        });
+    });
+
+    // Logo hover spin
+    const logoLink = document.getElementById('pill-logo-link');
+    const logoImg = document.getElementById('pill-logo-img');
+    let logoTween = null;
+    if (logoLink && logoImg) {
+        logoLink.addEventListener('mouseenter', () => {
+            if (logoTween) logoTween.kill();
+            gsap.set(logoImg, { rotate: 0 });
+            logoTween = gsap.to(logoImg, {
+                rotate: 360,
+                duration: 0.4,
+                ease: ease,
+                overwrite: 'auto'
+            });
+        });
+    }
+
+    // Mobile menu toggle
+    const hamburger = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu-popover');
+    let isMobileMenuOpen = false;
+
+    if (hamburger && mobileMenu) {
+        gsap.set(mobileMenu, { visibility: 'hidden', opacity: 0, scaleY: 1 });
+
+        hamburger.addEventListener('click', () => {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            const lines = hamburger.querySelectorAll('.hamburger-line');
+
+            if (isMobileMenuOpen) {
+                gsap.to(lines[0], { rotation: 45, y: 3, duration: 0.3, ease });
+                gsap.to(lines[1], { rotation: -45, y: -3, duration: 0.3, ease });
+                gsap.set(mobileMenu, { visibility: 'visible' });
+                gsap.fromTo(
+                    mobileMenu,
+                    { opacity: 0, y: 10, scaleY: 1 },
+                    { opacity: 1, y: 0, scaleY: 1, duration: 0.3, ease, transformOrigin: 'top center' }
+                );
+            } else {
+                gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
+                gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
+                gsap.to(mobileMenu, {
+                    opacity: 0,
+                    y: 10,
+                    scaleY: 1,
+                    duration: 0.2,
+                    ease,
+                    transformOrigin: 'top center',
+                    onComplete: () => {
+                        gsap.set(mobileMenu, { visibility: 'hidden' });
+                    }
+                });
+            }
+        });
+
+        // Close menu on mobile menu item click
+        const mobileLinks = mobileMenu.querySelectorAll('.mobile-menu-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                isMobileMenuOpen = false;
+                const lines = hamburger.querySelectorAll('.hamburger-line');
+                gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
+                gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
+                gsap.to(mobileMenu, {
+                    opacity: 0,
+                    y: 10,
+                    duration: 0.2,
+                    ease,
+                    onComplete: () => {
+                        gsap.set(mobileMenu, { visibility: 'hidden' });
+                    }
+                });
+            });
+        });
+    }
+
+    // Initial load animation
+    const logoEl = document.getElementById('pill-logo-link');
+    const navItemsEl = document.getElementById('pill-nav-items');
+
+    if (logoEl) {
+        gsap.set(logoEl, { scale: 0 });
+        gsap.to(logoEl, { scale: 1, duration: 0.6, ease });
+    }
+    if (navItemsEl) {
+        gsap.set(navItemsEl, { width: 0, overflow: 'hidden' });
+        gsap.to(navItemsEl, { width: 'auto', duration: 0.6, ease });
+    }
+})();
 
 // ================== FADE-IN ANIMATIONS ==================
 const fadeElements = document.querySelectorAll('.fade-in');
