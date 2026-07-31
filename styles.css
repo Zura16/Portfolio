@@ -35,27 +35,61 @@
     --fill-opacity: 0.5;
 }
 
-/* ================== FLUID GLASS CURSOR LENS ================== */
+/* ================== WATER DROPLET GLASS CURSOR ================== */
 .fluid-glass-cursor {
     position: fixed;
     top: 0;
     left: 0;
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
-    backdrop-filter: blur(12px) contrast(1.15) brightness(1.06);
-    -webkit-backdrop-filter: blur(12px) contrast(1.15) brightness(1.06);
-    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(3px) contrast(1.08) brightness(1.04);
+    -webkit-backdrop-filter: blur(3px) contrast(1.08) brightness(1.04);
+    border: 1px solid rgba(255, 255, 255, 0.7);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.12),
-        inset 0 0 15px rgba(255, 255, 255, 0.4),
-        0 0 24px rgba(139, 105, 20, 0.25);
+        inset 0 4px 8px rgba(255, 255, 255, 0.85),
+        inset 0 -4px 10px rgba(0, 0, 0, 0.08),
+        0 8px 24px rgba(0, 0, 0, 0.06),
+        0 0 16px rgba(255, 255, 255, 0.4);
     transform: translate3d(-50%, -50%, 0);
-    transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease;
     will-change: transform;
     display: none;
+    overflow: hidden;
+}
+
+/* Water Droplet Specular Glare Reflection */
+.fluid-glass-cursor::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 18%;
+    width: 42%;
+    height: 25%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.15) 100%);
+    filter: blur(0.5px);
+    pointer-events: none;
+}
+
+/* Water Droplet Rim Light Reflection */
+.fluid-glass-cursor::after {
+    content: '';
+    position: absolute;
+    bottom: 12%;
+    right: 18%;
+    width: 32%;
+    height: 16%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    filter: blur(1px);
+    pointer-events: none;
 }
 
 @media (min-width: 769px) {
@@ -65,15 +99,17 @@
 }
 
 .fluid-glass-cursor.hovering {
-    width: 84px;
-    height: 84px;
-    backdrop-filter: blur(16px) contrast(1.22) brightness(1.1);
-    -webkit-backdrop-filter: blur(16px) contrast(1.22) brightness(1.1);
-    border-color: rgba(139, 105, 20, 0.75);
+    width: 78px;
+    height: 78px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px) contrast(1.12) brightness(1.06);
+    -webkit-backdrop-filter: blur(5px) contrast(1.12) brightness(1.06);
+    border-color: rgba(255, 255, 255, 0.9);
     box-shadow: 
-        0 12px 40px rgba(0, 0, 0, 0.18),
-        inset 0 0 20px rgba(255, 255, 255, 0.6),
-        0 0 32px rgba(139, 105, 20, 0.4);
+        inset 0 5px 12px rgba(255, 255, 255, 0.95),
+        inset 0 -5px 14px rgba(0, 0, 0, 0.1),
+        0 12px 32px rgba(0, 0, 0, 0.08),
+        0 0 24px rgba(139, 105, 20, 0.35);
 }
 
 html {
