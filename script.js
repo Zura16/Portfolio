@@ -656,9 +656,9 @@ if (contactForm) {
         cursor.id = 'custom-cursor';
         cursor.className = 'custom-cursor';
         cursor.innerHTML = `
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4.5 3.5L24 12C25.5 12.6 25.5 14.8 23.9 15.3L15.6 18.2C15.1 18.4 14.7 18.8 14.5 19.3L11.6 27.6C11.1 29.2 8.9 29.2 8.3 27.7L2.2 6.8C1.6 5 3 3 4.5 3.5Z" 
-                      fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 5L28 14.5C29.6 15.2 29.5 17.5 27.8 18L19.2 20.8C18.6 21 18.1 21.5 17.9 22.1L15.1 30.7C14.6 32.4 12.3 32.5 11.6 30.9L4.8 8.8C4.1 6.8 5.6 4.8 7.6 5.3Z" 
+                      fill="#FFFFFF" stroke="#000000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         `;
         document.body.appendChild(cursor);
