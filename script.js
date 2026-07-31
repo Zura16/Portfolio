@@ -646,90 +646,76 @@ if (contactForm) {
     });
 })();
 
-// ================== MAGNETIC FLUID GLOW ORB CURSOR ==================
-(function initMagneticGlowOrbCursor() {
+// ================== VELOCITY MORPHING GLASS TEARDROP CURSOR ==================
+(function initVelocityGlassDropletCursor() {
     if (window.innerWidth <= 768) return;
 
-    let dot = document.getElementById('orb-cursor-dot');
-    if (!dot) {
-        dot = document.createElement('div');
-        dot.id = 'orb-cursor-dot';
-        dot.className = 'orb-cursor-dot';
-        document.body.appendChild(dot);
-    }
-
-    let aura = document.getElementById('magnetic-aura-ring');
-    if (!aura) {
-        aura = document.createElement('div');
-        aura.id = 'magnetic-aura-ring';
-        aura.className = 'magnetic-aura-ring';
-        document.body.appendChild(aura);
+    let droplet = document.getElementById('velocity-glass-droplet');
+    if (!droplet) {
+        droplet = document.createElement('div');
+        droplet.id = 'velocity-glass-droplet';
+        droplet.className = 'velocity-glass-droplet';
+        document.body.appendChild(droplet);
     }
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    let dotX = mouseX, dotY = mouseY;
-    let auraX = mouseX, auraY = mouseY;
-    let targetAuraX = mouseX, targetAuraY = mouseY;
-    let isSnapped = false;
-    let snappedElem = null;
+    let currX = mouseX;
+    let currY = mouseY;
+    let prevX = mouseX;
+    let prevY = mouseY;
+    let angle = 0;
+    let speed = 0;
 
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
     });
 
-    const interactiveSelectors = 'a, button, .project-card, .border-glow-card, .pill, .contact-link-item';
+    function renderDroplet() {
+        currX += (mouseX - currX) * 0.22;
+        currY += (mouseY - currY) * 0.22;
 
+        // Calculate velocity vector
+        const vx = currX - prevX;
+        const vy = currY - prevY;
+        prevX = currX;
+        prevY = currY;
+
+        const currentSpeed = Math.sqrt(vx * vx + vy * vy);
+        speed += (currentSpeed - speed) * 0.2;
+
+        if (speed > 0.5) {
+            angle = Math.atan2(vy, vx) * (180 / Math.PI);
+        }
+
+        // Teardrop elongation based on velocity
+        const scaleX = 1 + Math.min(speed * 0.045, 0.85);
+        const scaleY = Math.max(0.55, 1 - speed * 0.025);
+
+        // Dynamic teardrop shape when moving fast
+        if (speed > 2.5) {
+            droplet.style.borderRadius = '50% 15% 50% 50%';
+        } else {
+            droplet.style.borderRadius = '50%';
+        }
+
+        droplet.style.transform = `translate3d(${currX}px, ${currY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${scaleX}, ${scaleY})`;
+
+        requestAnimationFrame(renderDroplet);
+    }
+    requestAnimationFrame(renderDroplet);
+
+    const interactiveSelectors = 'a, button, .project-card, .border-glow-card, .pill, .contact-link-item';
     document.addEventListener('mouseover', (e) => {
-        const target = e.target.closest(interactiveSelectors);
-        if (target) {
-            snappedElem = target;
-            isSnapped = true;
-            dot.classList.add('hovering');
-            aura.classList.add('snapped');
+        if (e.target.closest(interactiveSelectors)) {
+            droplet.classList.add('hovering');
         }
     });
 
     document.addEventListener('mouseout', (e) => {
-        const target = e.target.closest(interactiveSelectors);
-        if (target && target === snappedElem) {
-            snappedElem = null;
-            isSnapped = false;
-            dot.classList.remove('hovering');
-            aura.classList.remove('snapped');
-            aura.style.width = '44px';
-            aura.style.height = '44px';
-            aura.style.borderRadius = '50%';
+        if (e.target.closest(interactiveSelectors)) {
+            droplet.classList.remove('hovering');
         }
     });
-
-    function renderOrbCursor() {
-        // Dot tracks mouse quickly
-        dotX += (mouseX - dotX) * 0.35;
-        dotY += (mouseY - dotY) * 0.35;
-        dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
-
-        // Aura magnetic logic
-        if (isSnapped && snappedElem) {
-            const rect = snappedElem.getBoundingClientRect();
-            targetAuraX = rect.left + rect.width / 2;
-            targetAuraY = rect.top + rect.height / 2;
-
-            aura.style.width = `${rect.width + 12}px`;
-            aura.style.height = `${rect.height + 12}px`;
-            const computedStyle = window.getComputedStyle(snappedElem);
-            aura.style.borderRadius = computedStyle.borderRadius || '16px';
-        } else {
-            targetAuraX = mouseX;
-            targetAuraY = mouseY;
-        }
-
-        auraX += (targetAuraX - auraX) * 0.16;
-        auraY += (targetAuraY - auraY) * 0.16;
-        aura.style.transform = `translate3d(${auraX}px, ${auraY}px, 0) translate(-50%, -50%)`;
-
-        requestAnimationFrame(renderOrbCursor);
-    }
-    requestAnimationFrame(renderOrbCursor);
 })();

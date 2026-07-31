@@ -35,55 +35,47 @@
     --fill-opacity: 0.5;
 }
 
-/* ================== MAGNETIC FLUID GLOW ORB CURSOR ================== */
-.orb-cursor-dot {
+/* ================== VELOCITY MORPHING GLASS TEARDROP CURSOR ================== */
+.velocity-glass-droplet {
     position: fixed;
     top: 0;
     left: 0;
-    width: 10px;
-    height: 10px;
-    background: #1A1A1A;
-    border: 2px solid #DAA06D;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 10000;
-    transform: translate3d(-50%, -50%, 0);
-    box-shadow: 0 0 10px rgba(218, 160, 109, 0.6);
-    transition: width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease;
-    will-change: transform;
-    display: none;
-}
-
-.magnetic-aura-ring {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 44px;
-    height: 44px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
-    border: 1.5px solid rgba(218, 160, 109, 0.5);
-    background: rgba(218, 160, 109, 0.06);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(4px) brightness(1.05);
+    -webkit-backdrop-filter: blur(4px) brightness(1.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
     box-shadow: 
-        0 0 20px rgba(218, 160, 109, 0.2),
-        inset 0 0 12px rgba(218, 160, 109, 0.15);
+        inset 0 2px 6px rgba(255, 255, 255, 0.8),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.08),
+        0 6px 20px rgba(0, 0, 0, 0.08),
+        0 0 16px rgba(218, 160, 109, 0.35);
     transform: translate3d(-50%, -50%, 0);
-    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                border-radius 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 0.3s ease,
-                background 0.3s ease,
-                box-shadow 0.3s ease;
     will-change: transform, width, height;
     display: none;
+    overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Glass Specular Light Reflection */
+.velocity-glass-droplet::before {
+    content: '';
+    position: absolute;
+    top: 12%;
+    left: 20%;
+    width: 38%;
+    height: 24%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.2));
+    pointer-events: none;
 }
 
 @media (min-width: 769px) {
-    .orb-cursor-dot,
-    .magnetic-aura-ring {
+    .velocity-glass-droplet {
         display: block;
     }
     body {
@@ -94,21 +86,14 @@
     }
 }
 
-.magnetic-aura-ring.snapped {
-    border-color: rgba(218, 160, 109, 0.85);
-    background: rgba(218, 160, 109, 0.12);
+.velocity-glass-droplet.hovering {
+    width: 52px;
+    height: 52px;
+    background: rgba(218, 160, 109, 0.18);
+    border-color: rgba(218, 160, 109, 0.9);
     box-shadow: 
-        0 8px 32px rgba(218, 160, 109, 0.3),
-        inset 0 0 16px rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-}
-
-.orb-cursor-dot.hovering {
-    width: 14px;
-    height: 14px;
-    background: #DAA06D;
-    box-shadow: 0 0 16px rgba(218, 160, 109, 0.9);
+        inset 0 4px 10px rgba(255, 255, 255, 0.9),
+        0 10px 28px rgba(218, 160, 109, 0.45);
 }
 
 html {
