@@ -595,7 +595,7 @@ a {
 
 /* ================== TILTED CARD OVERLAY & CAPTION ================== */
 .tilted-card-overlay-element {
-    transform: translateZ(30px);
+    transform: translateZ(12px);
     will-change: transform;
 }
 

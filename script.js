@@ -594,8 +594,8 @@ if (contactForm) {
     caption.textContent = 'Aalind Kale — Software Engineer';
     document.body.appendChild(caption);
 
-    const rotateAmplitude = 12;
-    const scaleOnHover = 1.03;
+    const rotateAmplitude = 5;
+    const scaleOnHover = 1.015;
     let currRotateX = 0, currRotateY = 0, currScale = 1;
     let targetRotateX = 0, targetRotateY = 0, targetScale = 1;
     let lastY = 0;
