@@ -581,16 +581,13 @@ a {
 
 .sidebar-card.border-glow-card {
     padding: 0;
-    overflow: visible;
-    perspective: 800px;
+    overflow: hidden;
 }
 
 .sidebar-card .border-glow-inner {
     padding: 40px 24px;
     text-align: center;
     align-items: center;
-    transform-style: preserve-3d;
-    will-change: transform;
 }
 
 /* ================== TILTED CARD OVERLAY & CAPTION ================== */
