@@ -1111,13 +1111,14 @@ if (contactForm) {
     }
 
     function generateColor() {
-        const goldColors = [
-            { r: 0.22, g: 0.16, b: 0.04 },
-            { r: 0.34, g: 0.24, b: 0.06 },
-            { r: 0.45, g: 0.32, b: 0.08 },
-            { r: 0.18, g: 0.12, b: 0.02 }
+        const themeColors = [
+            { r: 0.191, g: 0.144, b: 0.027 }, // Amber Gold (#8B6914)
+            { r: 0.230, g: 0.181, b: 0.052 }, // Soft Warm Gold (#C49A2C)
+            { r: 0.207, g: 0.160, b: 0.055 }, // Honey Warm Amber (#D4A338)
+            { r: 0.217, g: 0.168, b: 0.038 }, // Soft Caramel Gold (#9E7B1C)
+            { r: 0.101, g: 0.096, b: 0.084 }  // Warm Parchment Charcoal (#4A463D)
         ];
-        return goldColors[Math.floor(Math.random() * goldColors.length)];
+        return themeColors[Math.floor(Math.random() * themeColors.length)];
     }
 
     let lastX = 0, lastY = 0;

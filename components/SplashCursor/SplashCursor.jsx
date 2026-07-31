@@ -14,10 +14,10 @@ function SplashCursor({
   SPLAT_FORCE = 6000,
   SHADING = true,
   COLOR_UPDATE_SPEED = 10,
-  BACK_COLOR = { r: 0.5, g: 0, b: 0 },
+  BACK_COLOR = { r: 0.95, g: 0.95, b: 0.93 },
   TRANSPARENT = true,
-  RAINBOW_MODE = true,
-  COLOR = '#ff0000'
+  RAINBOW_MODE = false,
+  COLOR = '#8b6914'
 }) {
   const canvasRef = useRef(null);
   const animationFrameId = useRef(null);
