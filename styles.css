@@ -1201,6 +1201,15 @@ a {
     box-shadow: 0 10px 30px rgba(139, 105, 20, 0.2);
 }
 
+/* Spacing between Academic Background and Contact */
+#education {
+    margin-bottom: 140px;
+}
+
+#contact {
+    margin-top: 40px;
+}
+
 .contact-links {
     display: flex;
     flex-direction: column;
