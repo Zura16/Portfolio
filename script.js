@@ -284,56 +284,42 @@ if (contactForm) {
     });
 }
 
-// ================== BORDER GLOW EFFECT (OPTIMIZED) ==================
+// ================== BORDER GLOW EFFECT ==================
 (function () {
     const glowCards = document.querySelectorAll('.border-glow-card');
     if (!glowCards.length) return;
 
     let mouseX = 0, mouseY = 0;
     let rafId = null;
-    let cardRects = new Map();
-
-    function updateCardRects() {
-        glowCards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            cardRects.set(card, {
-                top: rect.top,
-                left: rect.left,
-                right: rect.right,
-                bottom: rect.bottom,
-                width: rect.width,
-                height: rect.height,
-                centerX: rect.left + rect.width / 2,
-                centerY: rect.top + rect.height / 2
-            });
-        });
-    }
-
-    updateCardRects();
-    window.addEventListener('scroll', updateCardRects, { passive: true });
-    window.addEventListener('resize', updateCardRects, { passive: true });
 
     function updateAllCards() {
-        const padding = 40;
-        const vh = window.innerHeight;
-        const vw = window.innerWidth;
+        glowCards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const padding = 40; // glow-padding
 
-        cardRects.forEach((rect, card) => {
-            if (rect.bottom < -padding || rect.top > vh + padding ||
-                rect.right < -padding || rect.left > vw + padding) {
+            // Check if card is in viewport
+            if (rect.bottom < -padding || rect.top > window.innerHeight + padding ||
+                rect.right < -padding || rect.left > window.innerWidth + padding) {
                 return;
             }
 
+            // Calculate proximity (0 = far, 100 = touching)
+            const cardCenterX = rect.left + rect.width / 2;
+            const cardCenterY = rect.top + rect.height / 2;
+
+            // Distance from cursor to card edge
             const closestX = Math.max(rect.left, Math.min(mouseX, rect.right));
             const closestY = Math.max(rect.top, Math.min(mouseY, rect.bottom));
             const distX = mouseX - closestX;
             const distY = mouseY - closestY;
             const distance = Math.sqrt(distX * distX + distY * distY);
 
+            // Convert distance to proximity (0 to 100)
             const maxDist = 300;
             const proximity = Math.max(0, Math.min(100, ((maxDist - distance) / maxDist) * 100));
 
-            const angle = Math.atan2(mouseY - rect.centerY, mouseX - rect.centerX);
+            // Calculate angle from card center to cursor
+            const angle = Math.atan2(mouseY - cardCenterY, mouseX - cardCenterX);
             const angleDeg = ((angle * 180 / Math.PI) + 360) % 360;
 
             card.style.setProperty('--edge-proximity', proximity.toFixed(1));
@@ -350,7 +336,7 @@ if (contactForm) {
                 rafId = null;
             });
         }
-    }, { passive: true });
+    });
 
     // Sweep animation on load
     function playSweepAnimation() {
@@ -361,11 +347,11 @@ if (contactForm) {
 
         function animate(now) {
             const progress = Math.min((now - start) / duration, 1);
-            const easedProgress = 1 - Math.pow(1 - progress, 3);
+            const easedProgress = 1 - Math.pow(1 - progress, 3); // ease-out cubic
 
             glowCards.forEach(card => {
-                const rect = cardRects.get(card);
-                if (!rect || rect.bottom < 0 || rect.top > window.innerHeight) return;
+                const rect = card.getBoundingClientRect();
+                if (rect.bottom < 0 || rect.top > window.innerHeight) return;
 
                 const sweepAngle = easedProgress * 360;
                 card.style.setProperty('--cursor-angle', sweepAngle + 'deg');
@@ -375,19 +361,16 @@ if (contactForm) {
             if (progress < 1) {
                 requestAnimationFrame(animate);
             } else {
-                glowCards.forEach(card => card.classList.remove('sweep-active'));
-                updateCardRects();
+                glowCards.forEach(card => {
+                    card.classList.remove('sweep-active');
+                    card.style.setProperty('--edge-proximity', '0');
+                });
             }
         }
-
         requestAnimationFrame(animate);
     }
 
-    if (document.readyState === 'complete') {
-        setTimeout(playSweepAnimation, 300);
-    } else {
-        window.addEventListener('load', () => setTimeout(playSweepAnimation, 300));
-    }
+    setTimeout(playSweepAnimation, 500);
 })();
 
 // ================== LIQUID ETHER WEBGL BACKGROUND ==================
@@ -591,6 +574,76 @@ if (contactForm) {
     });
 })();
 
+// ================== TILTED CARD EFFECT FOR MAIN CARD ==================
+(function initTiltedCard() {
+    const mainCard = document.querySelector('.sidebar-card');
+    if (!mainCard) return;
+
+    const innerCard = mainCard.querySelector('.border-glow-inner');
+    const profileWrapper = mainCard.querySelector('.profile-image-wrapper');
+    const sidebarName = mainCard.querySelector('.sidebar-name');
+    const sidebarTitle = mainCard.querySelector('.sidebar-title');
+
+    if (profileWrapper) profileWrapper.classList.add('tilted-card-overlay-element');
+    if (sidebarName) sidebarName.classList.add('tilted-card-overlay-element');
+    if (sidebarTitle) sidebarTitle.classList.add('tilted-card-overlay-element');
+
+    // Floating caption tooltip
+    const caption = document.createElement('div');
+    caption.className = 'tilted-card-caption';
+    caption.textContent = 'Aalind Kale — Software Engineer';
+    document.body.appendChild(caption);
+
+    const rotateAmplitude = 12;
+    const scaleOnHover = 1.03;
+    let currRotateX = 0, currRotateY = 0, currScale = 1;
+    let targetRotateX = 0, targetRotateY = 0, targetScale = 1;
+    let lastY = 0;
+
+    function renderTilt() {
+        currRotateX += (targetRotateX - currRotateX) * 0.1;
+        currRotateY += (targetRotateY - currRotateY) * 0.1;
+        currScale += (targetScale - currScale) * 0.1;
+
+        if (innerCard) {
+            innerCard.style.transform = `rotateX(${currRotateX.toFixed(2)}deg) rotateY(${currRotateY.toFixed(2)}deg) scale(${currScale.toFixed(3)})`;
+        }
+        requestAnimationFrame(renderTilt);
+    }
+    requestAnimationFrame(renderTilt);
+
+    mainCard.addEventListener('mousemove', (e) => {
+        if (window.innerWidth <= 640) return;
+
+        const rect = mainCard.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left - rect.width / 2;
+        const offsetY = e.clientY - rect.top - rect.height / 2;
+
+        targetRotateX = (offsetY / (rect.height / 2)) * -rotateAmplitude;
+        targetRotateY = (offsetX / (rect.width / 2)) * rotateAmplitude;
+
+        // Position caption tooltip
+        caption.style.left = `${e.clientX}px`;
+        caption.style.top = `${e.clientY}px`;
+        caption.style.opacity = '1';
+
+        const velocityY = offsetY - lastY;
+        caption.style.transform = `translate(-50%, -140%) rotate(${-velocityY * 0.4}deg)`;
+        lastY = offsetY;
+    });
+
+    mainCard.addEventListener('mouseenter', () => {
+        if (window.innerWidth > 640) {
+            targetScale = scaleOnHover;
+        }
+    });
+
+    mainCard.addEventListener('mouseleave', () => {
+        targetRotateX = 0;
+        targetRotateY = 0;
+        targetScale = 1;
+        caption.style.opacity = '0';
+    });
 })();
 
 // ================== CUSTOM POINTER CURSOR ==================
@@ -603,9 +656,9 @@ if (contactForm) {
         cursor.id = 'custom-cursor';
         cursor.className = 'custom-cursor';
         cursor.innerHTML = `
-            <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 5L28 14.5C29.6 15.2 29.5 17.5 27.8 18L19.2 20.8C18.6 21 18.1 21.5 17.9 22.1L15.1 30.7C14.6 32.4 12.3 32.5 11.6 30.9L4.8 8.8C4.1 6.8 5.6 4.8 7.6 5.3Z" 
-                      fill="#FFFFFF" stroke="#000000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.5 3.5L24 12C25.5 12.6 25.5 14.8 23.9 15.3L15.6 18.2C15.1 18.4 14.7 18.8 14.5 19.3L11.6 27.6C11.1 29.2 8.9 29.2 8.3 27.7L2.2 6.8C1.6 5 3 3 4.5 3.5Z" 
+                      fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         `;
         document.body.appendChild(cursor);

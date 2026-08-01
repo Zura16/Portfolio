@@ -40,14 +40,13 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
     pointer-events: none;
     z-index: 9999;
     transform: translate3d(0, 0, 0);
     will-change: transform;
     display: none;
-    overflow: visible;
 }
 
 @media (min-width: 769px) {
@@ -581,18 +580,21 @@ a {
 
 .sidebar-card.border-glow-card {
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
+    perspective: 800px;
 }
 
 .sidebar-card .border-glow-inner {
     padding: 40px 24px;
     text-align: center;
     align-items: center;
+    transform-style: preserve-3d;
+    will-change: transform;
 }
 
 /* ================== TILTED CARD OVERLAY & CAPTION ================== */
 .tilted-card-overlay-element {
-    transform: translateZ(12px);
+    transform: translateZ(30px);
     will-change: transform;
 }
 
