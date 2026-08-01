@@ -1242,7 +1242,6 @@ a {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    color: var(--accent, #8b6914);
 }
 
 .logoloop--scale-hover .logoloop__node:hover {
