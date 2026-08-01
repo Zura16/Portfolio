@@ -583,39 +583,12 @@ a {
 .sidebar-card.border-glow-card {
     padding: 0;
     overflow: visible;
-    perspective: 800px;
 }
 
 .sidebar-card .border-glow-inner {
     padding: 40px 24px;
     text-align: center;
     align-items: center;
-    transform-style: preserve-3d;
-    will-change: transform;
-}
-
-/* ================== TILTED CARD OVERLAY & CAPTION ================== */
-.tilted-card-overlay-element {
-    transform: translateZ(30px);
-    will-change: transform;
-}
-
-.tilted-card-caption {
-    pointer-events: none;
-    position: fixed;
-    border-radius: 6px;
-    background-color: var(--text-primary, #1a1a1a);
-    padding: 5px 12px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #ffffff;
-    opacity: 0;
-    z-index: 1001;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    transition: opacity 0.2s ease;
-    transform: translate(-50%, -140%);
 }
 
 @media (max-width: 640px) {

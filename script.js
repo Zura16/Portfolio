@@ -574,77 +574,7 @@ if (contactForm) {
     });
 })();
 
-// ================== TILTED CARD EFFECT FOR MAIN CARD ==================
-(function initTiltedCard() {
-    const mainCard = document.querySelector('.sidebar-card');
-    if (!mainCard) return;
 
-    const innerCard = mainCard.querySelector('.border-glow-inner');
-    const profileWrapper = mainCard.querySelector('.profile-image-wrapper');
-    const sidebarName = mainCard.querySelector('.sidebar-name');
-    const sidebarTitle = mainCard.querySelector('.sidebar-title');
-
-    if (profileWrapper) profileWrapper.classList.add('tilted-card-overlay-element');
-    if (sidebarName) sidebarName.classList.add('tilted-card-overlay-element');
-    if (sidebarTitle) sidebarTitle.classList.add('tilted-card-overlay-element');
-
-    // Floating caption tooltip
-    const caption = document.createElement('div');
-    caption.className = 'tilted-card-caption';
-    caption.textContent = 'Aalind Kale — Software Engineer';
-    document.body.appendChild(caption);
-
-    const rotateAmplitude = 12;
-    const scaleOnHover = 1.03;
-    let currRotateX = 0, currRotateY = 0, currScale = 1;
-    let targetRotateX = 0, targetRotateY = 0, targetScale = 1;
-    let lastY = 0;
-
-    function renderTilt() {
-        currRotateX += (targetRotateX - currRotateX) * 0.1;
-        currRotateY += (targetRotateY - currRotateY) * 0.1;
-        currScale += (targetScale - currScale) * 0.1;
-
-        if (innerCard) {
-            innerCard.style.transform = `rotateX(${currRotateX.toFixed(2)}deg) rotateY(${currRotateY.toFixed(2)}deg) scale(${currScale.toFixed(3)})`;
-        }
-        requestAnimationFrame(renderTilt);
-    }
-    requestAnimationFrame(renderTilt);
-
-    mainCard.addEventListener('mousemove', (e) => {
-        if (window.innerWidth <= 640) return;
-
-        const rect = mainCard.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left - rect.width / 2;
-        const offsetY = e.clientY - rect.top - rect.height / 2;
-
-        targetRotateX = (offsetY / (rect.height / 2)) * -rotateAmplitude;
-        targetRotateY = (offsetX / (rect.width / 2)) * rotateAmplitude;
-
-        // Position caption tooltip
-        caption.style.left = `${e.clientX}px`;
-        caption.style.top = `${e.clientY}px`;
-        caption.style.opacity = '1';
-
-        const velocityY = offsetY - lastY;
-        caption.style.transform = `translate(-50%, -140%) rotate(${-velocityY * 0.4}deg)`;
-        lastY = offsetY;
-    });
-
-    mainCard.addEventListener('mouseenter', () => {
-        if (window.innerWidth > 640) {
-            targetScale = scaleOnHover;
-        }
-    });
-
-    mainCard.addEventListener('mouseleave', () => {
-        targetRotateX = 0;
-        targetRotateY = 0;
-        targetScale = 1;
-        caption.style.opacity = '0';
-    });
-})();
 
 // ================== CUSTOM POINTER CURSOR ==================
 (function initCustomCursor() {
