@@ -1238,6 +1238,13 @@ a {
     line-height: 1;
 }
 
+.tech-logo {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--accent, #8b6914);
+}
+
 .logoloop--scale-hover .logoloop__node:hover {
     transform: scale(1.1);
     border-color: rgba(218, 160, 109, 0.8);
