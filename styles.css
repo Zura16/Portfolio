@@ -1239,7 +1239,7 @@ a {
     padding: 12px 20px;
     background: var(--surface, #EEEDEA);
     border: 1.5px solid #000000;
-    border-radius: 8px;
+    border-radius: 0;
     font-weight: 600;
     font-size: 0.95rem;
     color: var(--text-primary, #1a1a1a);
