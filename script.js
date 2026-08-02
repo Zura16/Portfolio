@@ -630,53 +630,59 @@ if (contactForm) {
 })();
 
 // ================== REACT BITS LOGOLOOP ==================
-(function initLogoLoop() {
-    const loopContainer = document.getElementById('skills-logoloop');
-    const track = document.getElementById('skills-logoloop-track');
-    if (!loopContainer || !track) return;
+function initLogoLoop() {
+    function setupMarquee(containerId, trackId, speedPx) {
+        const container = document.getElementById(containerId);
+        const track = document.getElementById(trackId);
+        if (!container || !track) return;
 
-    const firstList = track.querySelector('.logoloop__list');
-    if (!firstList) return;
+        const firstList = track.querySelector('.logoloop__list');
+        if (!firstList) return;
 
-    // Duplicate list items for seamless infinite marquee loop
-    const copiesNeeded = 4;
-    for (let i = 1; i < copiesNeeded; i++) {
-        const clone = firstList.cloneNode(true);
-        clone.setAttribute('aria-hidden', 'true');
-        track.appendChild(clone);
-    }
+        // Duplicate list items for seamless infinite marquee loop
+        const copiesNeeded = 4;
+        for (let i = 1; i < copiesNeeded; i++) {
+            const clone = firstList.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            track.appendChild(clone);
+        }
 
-    let offset = 0;
-    const speed = 70; // px / sec
-    let currentVelocity = speed;
-    let targetVelocity = speed;
-    let lastTime = null;
+        let offset = 0;
+        const speed = speedPx;
+        let currentVelocity = speed;
+        let targetVelocity = speed;
+        let lastTime = null;
 
-    track.addEventListener('mouseenter', () => {
-        targetVelocity = 0; // Pause on hover
-    });
+        track.addEventListener('mouseenter', () => {
+            targetVelocity = 0; // Pause on hover
+        });
 
-    track.addEventListener('mouseleave', () => {
-        targetVelocity = speed;
-    });
+        track.addEventListener('mouseleave', () => {
+            targetVelocity = speed;
+        });
 
-    function animate(timestamp) {
-        if (lastTime === null) lastTime = timestamp;
-        const deltaTime = Math.max(0, timestamp - lastTime) / 1000;
-        lastTime = timestamp;
+        function animate(timestamp) {
+            if (lastTime === null) lastTime = timestamp;
+            const deltaTime = Math.max(0, timestamp - lastTime) / 1000;
+            lastTime = timestamp;
 
-        // Smooth easing towards target velocity
-        const easingFactor = 1 - Math.exp(-deltaTime / 0.25);
-        currentVelocity += (targetVelocity - currentVelocity) * easingFactor;
+            const easingFactor = 1 - Math.exp(-deltaTime / 0.25);
+            currentVelocity += (targetVelocity - currentVelocity) * easingFactor;
 
-        const listWidth = firstList.getBoundingClientRect().width;
-        if (listWidth > 0) {
-            offset += currentVelocity * deltaTime;
-            offset = ((offset % listWidth) + listWidth) % listWidth;
-            track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+            const listWidth = firstList.getBoundingClientRect().width;
+            if (listWidth > 0) {
+                offset += currentVelocity * deltaTime;
+                offset = ((offset % listWidth) + listWidth) % listWidth;
+                track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+            }
+
+            requestAnimationFrame(animate);
         }
 
         requestAnimationFrame(animate);
     }
-    requestAnimationFrame(animate);
-})();
+
+    setupMarquee('skills-logoloop-1', 'skills-logoloop-track-1', 65);
+    setupMarquee('skills-logoloop-2', 'skills-logoloop-track-2', -65);
+}
+initLogoLoop();
