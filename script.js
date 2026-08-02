@@ -598,6 +598,7 @@ if (contactForm) {
     let mouseY = window.innerHeight / 2;
     let currX = mouseX;
     let currY = mouseY;
+    let hoveredSkillNode = null;
 
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
@@ -605,25 +606,51 @@ if (contactForm) {
     });
 
     function renderCursor() {
-        currX += (mouseX - currX) * 0.25;
-        currY += (mouseY - currY) * 0.25;
+        if (!cursor) return;
 
-        if (cursor) {
+        if (hoveredSkillNode && document.body.contains(hoveredSkillNode)) {
+            const rect = hoveredSkillNode.getBoundingClientRect();
+            currX += (rect.left - currX) * 0.3;
+            currY += (rect.top - currY) * 0.3;
+
+            cursor.style.width = `${rect.width}px`;
+            cursor.style.height = `${rect.height}px`;
+            cursor.style.transform = `translate3d(${currX}px, ${currY}px, 0)`;
+        } else {
+            currX += (mouseX - currX) * 0.25;
+            currY += (mouseY - currY) * 0.25;
+
+            cursor.style.width = '';
+            cursor.style.height = '';
             cursor.style.transform = `translate3d(${currX}px, ${currY}px, 0)`;
         }
+
         requestAnimationFrame(renderCursor);
     }
     requestAnimationFrame(renderCursor);
 
     const interactiveSelectors = 'a, button, .project-card, .border-glow-card, .pill, .contact-link-item';
+
     document.addEventListener('mouseover', (e) => {
-        if (e.target.closest(interactiveSelectors)) {
+        const skillNode = e.target.closest('.logoloop__node');
+        if (skillNode) {
+            hoveredSkillNode = skillNode;
+            cursor.classList.add('is-node-expanded');
+        } else if (e.target.closest(interactiveSelectors)) {
             cursor.classList.add('hovering');
         }
     });
 
     document.addEventListener('mouseout', (e) => {
-        if (e.target.closest(interactiveSelectors)) {
+        const skillNode = e.target.closest('.logoloop__node');
+        if (skillNode) {
+            if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.logoloop__node')) {
+                hoveredSkillNode = null;
+                cursor.classList.remove('is-node-expanded');
+                cursor.style.width = '';
+                cursor.style.height = '';
+            }
+        } else if (e.target.closest(interactiveSelectors)) {
             cursor.classList.remove('hovering');
         }
     });
