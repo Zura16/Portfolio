@@ -851,38 +851,15 @@ a {
     text-align: left;
     align-items: stretch;
     height: 100%;
-    overflow: hidden;
-    padding: 0;
-}
-
-.project-poster {
-    width: 100%;
-    height: 185px;
-    position: relative;
-    overflow: hidden;
-    background: #000000;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.project-poster img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.project-card:hover .project-poster img {
-    transform: scale(1.06);
+    padding: 32px 24px;
 }
 
 .project-info {
-    padding: 24px 22px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    flex-grow: 1;
+    height: 100%;
 }
 
 .project-header {
