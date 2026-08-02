@@ -1196,7 +1196,7 @@ a {
     position: relative;
     overflow: hidden;
     width: 100%;
-    padding: 28px 0;
+    padding: 6px 0;
     --logoloop-gap: 20px;
     --logoloop-fadeColor: var(--bg, #F4F3EF);
 }
@@ -1228,7 +1228,7 @@ a {
 .logoloop-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     margin-top: 20px;
 }
 
