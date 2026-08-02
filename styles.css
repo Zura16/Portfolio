@@ -1236,10 +1236,10 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 14px 24px;
+    padding: 12px 20px;
     background: var(--surface, #EEEDEA);
     border: 1.5px solid #000000;
-    border-radius: 100px;
+    border-radius: 8px;
     font-weight: 600;
     font-size: 0.95rem;
     color: var(--text-primary, #1a1a1a);
