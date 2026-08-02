@@ -1256,6 +1256,14 @@ a {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    filter: grayscale(100%);
+    opacity: 0.85;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.logoloop__node:hover .tech-logo {
+    filter: grayscale(0%);
+    opacity: 1;
 }
 
 .logoloop--scale-hover .logoloop__node:hover {
